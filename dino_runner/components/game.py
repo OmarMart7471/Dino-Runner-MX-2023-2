@@ -14,8 +14,10 @@ class Game:
         self.game_speed = 20
         self.x_pos_bg = 0
         self.y_pos_bg = 380
-        self.x_pos_c1 = 100
+        self.x_pos_c1 = 700
         self.y_pos_c1 = 50
+        self.x_pos_c2 = 300
+        self.y_pos_c2 = 90
         self.player = Dinosaur()
 
     def run(self):
@@ -47,15 +49,17 @@ class Game:
     def draw_background(self):
         image_width = BG.get_width()
         cloud1 = CLOUD
-        
-        self.screen.blit(cloud1,(self.x_pos_c1,self.y_pos_c1))
+        cloud2 = CLOUD
+
         self.screen.blit(BG, (self.x_pos_bg, self.y_pos_bg))
-        self.screen.blit(cloud1,(image_width +self.x_pos_c1,self.y_pos_c1))
+        self.x_pos_c1 -= 2
+        self.x_pos_c2 -= 5
+        if self.x_pos_c1 < -100: self.x_pos_c1 = 1500
+        if self.x_pos_c2 < -100: self.x_pos_c2 = 1000
+        self.screen.blit(cloud1,(self.x_pos_c1,self.y_pos_c1))
+        self.screen.blit(cloud2,(self.x_pos_c2,self.y_pos_c2))
         self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
-        if self.x_pos_bg <= -image_width :
+        if self.x_pos_bg < -image_width :
             self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
-            self.screen.blit(cloud1,(image_width +self.x_pos_c1,self.y_pos_c1))
             self.x_pos_bg = 0
-            self.x_pos_c1 = 0
         self.x_pos_bg -= self.game_speed
-        self.x_pos_c1 -= self.game_speed
