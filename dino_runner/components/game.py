@@ -57,6 +57,12 @@ class Game:
         cloud1 = CLOUD
         cloud2 = CLOUD
 
+        test_font = pygame.font.Font(None,50)
+        current_time = int(pygame.time.get_ticks()/10)
+        score_surf = test_font.render(f'Score : {current_time}',False,(64,64,64))
+        score_rect = score_surf.get_rect(center = (900,50))
+        self.screen.blit(score_surf,score_rect)
+
         self.screen.blit(BG, (self.x_pos_bg, self.y_pos_bg))
         self.x_pos_c1 -= 2
         self.x_pos_c2 -= 5
