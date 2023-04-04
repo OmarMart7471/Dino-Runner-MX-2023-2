@@ -29,7 +29,9 @@ class Game:
             self.events()
             self.update()
             self.draw()
-        pygame.quit()
+        else:
+            self.screen.fill((94,129,162))
+        #pygame.quit()
 
     def events(self):
         for event in pygame.event.get():
@@ -40,8 +42,7 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacle_manager.update(self.game_speed,self.player)
-        if self.player.dino_dead:
-            self.playing = False
+        if self.player.dino_dead: self.playing = False
 
     def draw(self):
         self.clock.tick(FPS)
@@ -57,10 +58,10 @@ class Game:
         cloud1 = CLOUD
         cloud2 = CLOUD
 
-        test_font = pygame.font.Font(None,50)
+        test_font = pygame.font.Font(None,40)
         current_time = int(pygame.time.get_ticks()/10)
         score_surf = test_font.render(f'Score : {current_time}',False,(64,64,64))
-        score_rect = score_surf.get_rect(center = (900,50))
+        score_rect = score_surf.get_rect(center = (990,50))
         self.screen.blit(score_surf,score_rect)
 
         self.screen.blit(BG, (self.x_pos_bg, self.y_pos_bg))
