@@ -1,9 +1,10 @@
-class Obstacle:
-    def __init__(self) -> None:
-        pass
+import random
+from dino_runner.components.obstacle import Obstacle
+from dino_runner.utils.constants import SMALL_CACTUS,LARGE_CACTUS
 
-    def update(self):
-        pass
-
-    def draw(self):
-        pass
+class Cactus(Obstacle):
+    Y_POS_CACTUS = 325
+    def __init__(self):
+        self.image = random.choice(SMALL_CACTUS)
+        super().__init__(self.image)
+        self.rect.y = self.Y_POS_CACTUS
