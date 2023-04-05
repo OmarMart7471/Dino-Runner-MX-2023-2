@@ -1,15 +1,20 @@
 from dino_runner.components.PowerUps.shield import Shield
+from dino_runner.components.PowerUps.hammer import Hammer
+import random
+
 
 class PowerUpManager:
 
     POINTS = 200
+    classList = [Shield,Hammer]
 
     def __init__(self):
         self.power_ups = []
         
     def update(self,game_speed, points,player):
         if len(self.power_ups) == 0 and points % self.POINTS == 0:
-            self.power_ups.append(Shield())
+            random_class =  random.choice(self.classList)
+            self.power_ups.append(random_class())
         for power_up in self.power_ups:
             if power_up.used or power_up.rect.x < -power_up.rect.width:
                 self.power_ups.pop()

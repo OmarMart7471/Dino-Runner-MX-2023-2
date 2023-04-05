@@ -2,7 +2,7 @@
 import pygame
 from dino_runner.utils.constants import (RUNNING,RUNNING_HAMMER,RUNNING_SHIELD,
 JUMPING,JUMPING_HAMMER,JUMPING_SHIELD,DUCKING,DUCKING_HAMMER,DUCKING_SHIELD,
-DEFAULT_TYPE,SHIELD_TYPE
+DEFAULT_TYPE,SHIELD_TYPE,HAMMER_TYPE
 )
 class Dinosaur:
 
@@ -12,9 +12,9 @@ class Dinosaur:
     JUMP_SPEED = 8.5
 
     def __init__(self):
-        self.run_img = {DEFAULT_TYPE:RUNNING, SHIELD_TYPE:RUNNING_SHIELD}
-        self.duck_img = {DEFAULT_TYPE:DUCKING, SHIELD_TYPE:DUCKING_SHIELD}
-        self.jump_img = {DEFAULT_TYPE:JUMPING, SHIELD_TYPE:JUMPING_SHIELD}
+        self.run_img = {DEFAULT_TYPE:RUNNING, SHIELD_TYPE:RUNNING_SHIELD, HAMMER_TYPE:RUNNING_HAMMER}
+        self.duck_img = {DEFAULT_TYPE:DUCKING, SHIELD_TYPE:DUCKING_SHIELD, HAMMER_TYPE:DUCKING_HAMMER}
+        self.jump_img = {DEFAULT_TYPE:JUMPING, SHIELD_TYPE:JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
         self.type= DEFAULT_TYPE
         self.image = self.run_img[self.type][0]
         self.dino_rect = self.image.get_rect()
@@ -27,6 +27,7 @@ class Dinosaur:
         self.jump_vel = self.JUMP_SPEED
         self.dino_dead = False
         self.shield =  False
+        self.hammer =  False
         self.time_up_power_up = 0
 
 
@@ -82,6 +83,10 @@ class Dinosaur:
             time_to_show=  round((self.time_up_power_up - pygame.time.get_ticks())/1000, 2)
             if time_to_show < 0:
                 self.reset()
+        if self.hammer:
+            time_to_show=  round((self.time_up_power_up - pygame.time.get_ticks())/1000, 2)
+            if time_to_show < 0:
+                self.reset()
 
 
     def draw(self,screen):
@@ -92,9 +97,14 @@ class Dinosaur:
             self.type = SHIELD_TYPE
             self.shield = True
             self.time_up_power_up = power_up.time_up
+        if power_up.type == HAMMER_TYPE:
+            self.type = HAMMER_TYPE
+            self.hammer = True
+            self.time_up_power_up = power_up.time_up
 
     def reset(self):
         self.type = DEFAULT_TYPE
         self.shield = False
+        self.hammer =  False
         self.time_up_power_up = 0
         
