@@ -8,12 +8,10 @@ class ObstacleManager:
     def __init__(self):
         self.obstacles = []
 
-
     def update(self,game_speed,player):
         if len(self.obstacles) == 0:
             random_class = random.choice(self.class_list)
             self.obstacles.append(random_class())
-
         for obstacle in self.obstacles:
             if obstacle.rect.x < -obstacle.rect.width:
                 self.obstacles.pop()

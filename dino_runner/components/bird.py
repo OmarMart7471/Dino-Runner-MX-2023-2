@@ -6,7 +6,6 @@ from dino_runner.components.obstacle import Obstacle
 class Bird(Obstacle):
     def __init__(self):
         self.image = BIRD[0]
-        self.bird_step_index = 0
         super().__init__(self.image)
         self.Y_POS = random.choice([200, 150, 300]) 
         self.rect.y = self.Y_POS

@@ -2,9 +2,13 @@ import pygame
 
 from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS,CLOUD
 from dino_runner.components.dinosaur import Dinosaur
+from dino_runner.components.PowerUps.power_up_manager import PowerUpManager
 from dino_runner.components.Obstacle_manager import ObstacleManager
 
+current_time = int(pygame.time.get_ticks()/10)
+
 class Game:
+    
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(TITLE)
@@ -20,7 +24,10 @@ class Game:
         self.x_pos_c2 = 300
         self.y_pos_c2 = 90
         self.player = Dinosaur()
+        self.power_up_manager = PowerUpManager()
         self.obstacle_manager = ObstacleManager()
+        self.points = 0
+        self.current_time = 0 
 
     def run(self):
         # Game loop: events - update - draw
@@ -42,7 +49,10 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacle_manager.update(self.game_speed,self.player)
+        self.power_up_manager.update(self.game_speed,self.points,self.player)
+        self.points += 1
         if self.player.dino_dead: self.playing = False
+        self.current_time = int(pygame.time.get_ticks()/10)
 
     def draw(self):
         self.clock.tick(FPS)
@@ -50,6 +60,7 @@ class Game:
         self.draw_background()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
+        self.power_up_manager.draw(self.screen)
         pygame.display.update()
         pygame.display.flip()
 
@@ -59,8 +70,8 @@ class Game:
         cloud2 = CLOUD
 
         test_font = pygame.font.Font(None,40)
-        current_time = int(pygame.time.get_ticks()/10)
-        score_surf = test_font.render(f'Score : {current_time}',False,(64,64,64))
+        
+        score_surf = test_font.render(f'Score : {self.current_time}',False,(64,64,64))
         score_rect = score_surf.get_rect(center = (990,50))
         self.screen.blit(score_surf,score_rect)
 
