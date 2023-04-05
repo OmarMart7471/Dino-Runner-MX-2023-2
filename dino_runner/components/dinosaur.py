@@ -2,7 +2,7 @@
 import pygame
 from dino_runner.utils.constants import (RUNNING,RUNNING_HAMMER,RUNNING_SHIELD,
 JUMPING,JUMPING_HAMMER,JUMPING_SHIELD,DUCKING,DUCKING_HAMMER,DUCKING_SHIELD,
-DEFAULT_TYPE,SHIELD_TYPE,HAMMER_TYPE
+DEFAULT_TYPE,SHIELD_TYPE,HAMMER_TYPE,GUN_TYPE,DUCKING_GUN,JUMPING_GUN,RUNNING_GUN
 )
 class Dinosaur:
 
@@ -12,9 +12,24 @@ class Dinosaur:
     JUMP_SPEED = 8.5
 
     def __init__(self):
-        self.run_img = {DEFAULT_TYPE:RUNNING, SHIELD_TYPE:RUNNING_SHIELD, HAMMER_TYPE:RUNNING_HAMMER}
-        self.duck_img = {DEFAULT_TYPE:DUCKING, SHIELD_TYPE:DUCKING_SHIELD, HAMMER_TYPE:DUCKING_HAMMER}
-        self.jump_img = {DEFAULT_TYPE:JUMPING, SHIELD_TYPE:JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
+        self.run_img = {
+            DEFAULT_TYPE:RUNNING, 
+            SHIELD_TYPE:RUNNING_SHIELD, 
+            HAMMER_TYPE:RUNNING_HAMMER,
+            GUN_TYPE:RUNNING_GUN
+            }
+        self.duck_img = {
+            DEFAULT_TYPE:DUCKING, 
+            SHIELD_TYPE:DUCKING_SHIELD, 
+            HAMMER_TYPE:DUCKING_HAMMER,
+            GUN_TYPE:DUCKING_GUN
+            }
+        self.jump_img = {
+            DEFAULT_TYPE:JUMPING, 
+            SHIELD_TYPE:JUMPING_SHIELD, 
+            HAMMER_TYPE: JUMPING_HAMMER,
+            GUN_TYPE:JUMPING_GUN
+            }
         self.type= DEFAULT_TYPE
         self.image = self.run_img[self.type][0]
         self.dino_rect = self.image.get_rect()
@@ -28,6 +43,7 @@ class Dinosaur:
         self.dino_dead = False
         self.shield =  False
         self.hammer =  False
+        self.gun =  False
         self.time_up_power_up = 0
 
 
@@ -79,15 +95,13 @@ class Dinosaur:
         if self.step_index >=10:
             self.step_index = 0
 
-        if self.shield:
-            time_to_show=  round((self.time_up_power_up - pygame.time.get_ticks())/1000, 2)
-            if time_to_show < 0:
-                self.reset()
-        if self.hammer:
-            time_to_show=  round((self.time_up_power_up - pygame.time.get_ticks())/1000, 2)
-            if time_to_show < 0:
-                self.reset()
+        self.time_show()
 
+    def time_show(self):
+        if self.shield or self.hammer or self.gun:
+            time_to_show=  round((self.time_up_power_up - pygame.time.get_ticks())/1000, 2)
+            if time_to_show < 0:
+                self.reset()
 
     def draw(self,screen):
         screen.blit(self.image,self.dino_rect)
@@ -101,10 +115,15 @@ class Dinosaur:
             self.type = HAMMER_TYPE
             self.hammer = True
             self.time_up_power_up = power_up.time_up
+        if power_up.type == GUN_TYPE:
+            self.type = GUN_TYPE
+            self.gun = True
+            self.time_up_power_up = power_up.time_up
 
     def reset(self):
         self.type = DEFAULT_TYPE
         self.shield = False
         self.hammer =  False
+        self.gun = False
         self.time_up_power_up = 0
         

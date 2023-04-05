@@ -1,12 +1,13 @@
 from dino_runner.components.PowerUps.shield import Shield
 from dino_runner.components.PowerUps.hammer import Hammer
+from dino_runner.components.PowerUps.gun import Gun
 import random
 
 
 class PowerUpManager:
 
     POINTS = 200
-    classList = [Shield,Hammer]
+    classList = [Shield,Hammer,Gun]
 
     def __init__(self):
         self.power_ups = []
