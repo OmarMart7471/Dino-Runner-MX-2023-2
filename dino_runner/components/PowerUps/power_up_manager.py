@@ -8,6 +8,7 @@ class PowerUpManager:
 
     POINTS = 200
     classList = [Shield,Hammer,Gun]
+    
 
     def __init__(self):
         self.power_ups = []
@@ -21,8 +22,12 @@ class PowerUpManager:
                 self.power_ups.pop()
             if power_up.used:
                 player.set_power_up(power_up)
+            power_up.image_change()
             power_up.update(game_speed,player)
 
     def draw(self,screen):
         for power_up in self.power_ups:
             power_up.draw(screen)
+
+    
+            
