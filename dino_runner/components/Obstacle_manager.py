@@ -16,7 +16,9 @@ class ObstacleManager:
             if obstacle.rect.x < -obstacle.rect.width:
                 self.obstacles.pop()
             if isinstance(obstacle,Bird):obstacle.fly()
-            obstacle.update(game_speed,player)
+            if obstacle.update(game_speed,player) == 1:
+               self.obstacles.remove(obstacle)
+   
 
     def draw(self,screen):
         for obstacle in self.obstacles:

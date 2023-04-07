@@ -11,8 +11,15 @@ class Obstacle:
         self.rect.x -= game_speed
         if self.rect.colliderect(player.dino_rect):
             if not player.shield:
-                pygame.time.delay(300)
                 player.dino_dead = True
+        if self.rect.colliderect(player.hammer_rect):
+            return 1
+        if self.rect.collidepoint((player.gun_fire_position[0], player.gun_fire_position[1])):
+            return 1
+
+
+    def get_rect(self):
+        return self.rect
 
     def draw(self,screen):
         screen.blit(self.image,self.rect)

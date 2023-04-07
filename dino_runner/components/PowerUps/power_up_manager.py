@@ -7,7 +7,7 @@ import random
 class PowerUpManager:
 
     POINTS = 200
-    classList = [Shield,Hammer,Gun]
+    classList = [Gun,Shield,Hammer]
     
 
     def __init__(self):
@@ -28,6 +28,5 @@ class PowerUpManager:
     def draw(self,screen):
         for power_up in self.power_ups:
             power_up.draw(screen)
-
     
             

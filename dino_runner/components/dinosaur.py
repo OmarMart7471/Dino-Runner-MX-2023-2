@@ -1,9 +1,12 @@
 #IMPORTACIÓN DE LAS IMAGENES
 import pygame
+from dino_runner.components import text_utils
 from dino_runner.utils.constants import (RUNNING,RUNNING_HAMMER,RUNNING_SHIELD,
 JUMPING,JUMPING_HAMMER,JUMPING_SHIELD,DUCKING,DUCKING_HAMMER,DUCKING_SHIELD,
-DEFAULT_TYPE,SHIELD_TYPE,HAMMER_TYPE,GUN_TYPE,DUCKING_GUN,JUMPING_GUN,RUNNING_GUN
+DEFAULT_TYPE,SHIELD_TYPE,HAMMER_TYPE,GUN_TYPE,DUCKING_GUN,JUMPING_GUN,RUNNING_GUN,
+SCREEN_WIDTH,HAMMER
 )
+from dino_runner.components.PowerUps.hammer import Hammer
 class Dinosaur:
 
     X_POS = 80
@@ -45,6 +48,11 @@ class Dinosaur:
         self.hammer =  False
         self.gun =  False
         self.time_up_power_up = 0
+        self.hammer_throw = False
+        self.gun_shot= False
+        self.gun_fire_position = (0,0)
+        self.hammer_pos = self.dino_rect.x +100
+        self.hammer_rect = HAMMER.get_rect()
 
 
     def run(self):
@@ -95,6 +103,14 @@ class Dinosaur:
         if self.step_index >=10:
             self.step_index = 0
 
+        if user_input[pygame.K_SPACE] and self.hammer:
+            self.hammer_throw = True
+
+        if self.gun:
+            self.gun_shot = True
+
+          
+
         self.time_show()
 
     def time_show(self):
@@ -103,8 +119,48 @@ class Dinosaur:
             if time_to_show < 0:
                 self.reset()
 
+
     def draw(self,screen):
         screen.blit(self.image,self.dino_rect)
+        if self.shield or self.hammer or self.gun:
+            time_to_show=  round((self.time_up_power_up - pygame.time.get_ticks())/1000, 2)
+            time = int(time_to_show)
+            text, text_rect = text_utils.get_message(f'POWER UP TIME: {time}', 30,SCREEN_WIDTH//2,500)
+            screen.blit(text, text_rect)
+        if self.hammer_throw:
+            self.draw_hammer(screen)
+            self.hammer_throw = False
+
+        if self.gun_shot:
+            self.draw_aiming(screen)
+            self.gun_shot = False
+
+
+    def draw_aiming(self,screen):
+        pygame.draw.line(screen,'Gold',(self.dino_rect.x+100,self.dino_rect.y+30),pygame.mouse.get_pos(),1)
+        if pygame.mouse.get_pressed()[0]:
+            print('clic derecho')
+            self.gun_fire_position = pygame.mouse.get_pos()
+
+
+
+    def draw_hammer(self,screen):
+        self.hammer_rect = self.hammer_rect
+        self.hammer_rect.x = self.hammer_pos
+        self.hammer_rect.y = self.dino_rect.y
+        if self.hammer:
+            if self.hammer_pos < SCREEN_WIDTH:
+                self.hammer_rect.x += 20
+                self.hammer_pos +=20 
+                screen.blit(HAMMER, self.hammer_rect)
+                
+            else:
+                self.hammer = False
+                self.reset()
+                self.hammer_pos = self.dino_rect.x +100
+        else:
+            screen.blit(HAMMER, self.hammer_rect)
+
 
     def set_power_up(self,power_up):
         if power_up.type == SHIELD_TYPE:
